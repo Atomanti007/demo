@@ -1,0 +1,46 @@
+plugins {
+    id 'maven-publish'
+    id 'org.springframework.boot' version "${springBoot}"
+    id 'io.spring.dependency-management' version "${springDependencyManagement}"
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+publishing {
+    repositories {
+        maven {
+            url = 'https://bijo.jfrog.io/artifactory/demo-maven/'
+            credentials {
+                username = project.hasProperty('jfrog_user') ? "${jfrog_user}" : ""
+                password = project.hasProperty('jfrog_password') ? "${jfrog_password}" : ""
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId group
+            artifactId "${rootProject.name}-interface"
+            version version
+
+            from components.java
+        }
+    }
+}
+
+dependencies {
+    implementation "hu.kzsolt:common:${commonVersion}"
+
+    implementation 'javax.validation:validation-api'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+    compileOnly  "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: "${openfeign}"
+}

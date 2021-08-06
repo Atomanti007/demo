@@ -1,0 +1,62 @@
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+
+    group 'hu.kzsolt'
+    version '1.0.0'
+
+    compileJava.options.encoding = "UTF-8"
+    compileTestJava.options.encoding = "UTF-8"
+
+    targetCompatibility = 1.11
+    sourceCompatibility = 1.11
+
+    ext {
+        // Spring
+        springdocOpenapiUi = "1.5.10"
+        springfoxswagger = "3.0.0"
+        springBoot = "2.5.3"
+        springDependencyManagement = "1.0.11.RELEASE"
+        mapstructVersion = "1.4.2.Final"
+
+        logstashLogbackEncoder = "6.6"
+        openfeign = "3.0.3"
+        lombokVersion = "1.18.20"
+        liquibaseVersion = "4.4.2"
+
+        // Tests
+        mockitoCore = "3.11.2"
+        junit = "4.13.2"
+        assuredXml = "4.4.0"
+
+        // Keycloak
+        keycloakAdminVersion = "14.0.0"
+
+        // Own services
+        commonVersion = "1.2.3"
+    }
+
+    repositories {
+        mavenCentral()
+        maven {
+            url ("https://bijo.jfrog.io/artifactory/bijo-maven/")
+        }
+        mavenLocal()
+    }
+    dependencies {
+        implementation "org.springframework.boot:spring-boot-starter:${springBoot}"
+        implementation "org.springframework.boot:spring-boot-starter-web:${springBoot}"
+
+        implementation "net.logstash.logback:logstash-logback-encoder:${logstashLogbackEncoder}"
+        testImplementation "junit:junit:${junit}"
+    }
+
+    test {
+        useJUnitPlatform ()
+    }
+}
+
+file("$projectDir/.name").text = rootProject.name
+file("$projectDir/.version").text = rootProject.version
+
+apply from: "release.gradle"
